@@ -1,0 +1,76 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:MyNotepad.ViewModels"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="MyNotepad.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Title="MyNotepad"
+        SystemDecorations="None">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+	<Window.Styles>
+		<Style Selector="TextBox">
+			<Setter Property="BorderBrush" Value="Gray"/>
+			<Setter Property="Background" Value="Black"/>
+			<Setter Property="CaretBrush" Value="White"/>
+		
+			<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Background" Value="#1c1f26"/>
+				<Setter Property="Foreground" Value="White"/>
+			</Style>
+			
+			<Style Selector="^:pointerover /template/ Border#PART_BorderElement">
+				<Setter Property="BorderBrush" Value="Gray"/>
+				<Setter Property="Background" Value="#1c1f26"/>
+			</Style>
+			<Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Foreground" Value="White"/>
+			</Style>
+			
+			<Style Selector="^:pressed /template/ Border#PART_BorderElement">
+				<Setter Property="BorderBrush" Value="Gray"/>
+				<Setter Property="Background" Value="#1c1f26"/>
+			</Style>
+			<Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Foreground" Value="White"/>
+			</Style>
+		
+			<Style Selector="^:focus /template/ Border#PART_BorderElement">
+				<Setter Property="BorderBrush" Value="Gray"/>
+				<Setter Property="Background" Value="#1c1f26"/>
+			</Style>
+			<Style Selector="^:focus /template/ ContentPresenter#PART_ContentPresenter">
+				<Setter Property="Foreground" Value="White"/>
+			</Style>
+		</Style>
+		<Style Selector="Button">
+			
+		</Style>
+		
+	</Window.Styles>
+
+	<Grid Background="#23272f">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="0.08*"/>
+			<RowDefinition Height="1*"/>
+		</Grid.RowDefinitions>
+
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="Auto"/>
+		</Grid.ColumnDefinitions>
+
+		<Rectangle PointerPressed="Rectangle_PointerPressed" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Fill="#171a1f" />
+
+		<TextBox AcceptsReturn="True" Grid.ColumnSpan="2" BorderBrush="Gray" Foreground="White" Grid.Row="1" Grid.Column="0" Margin="100,5,5,5" Background="#1c1f26"/>
+
+		<Button Click="Exit_Button_Click" Foreground="White" Grid.Row="0" Grid.Column="1" Content="X" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
+	</Grid>
+
+</Window>
