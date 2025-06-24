@@ -168,64 +168,55 @@ public partial class MainWindow : Window
 	private void ApplyFormattedText(TextBlock textBlock, string content)
 	{
 		textBlock.Inlines.Clear();
-		
-		var boldParts = Regex.Split(content, @"(\*[^*]+\*)");
-		var italicParts = Regex.Split(content, @"(_[^_]+_)");
-		var underlineParts = Regex.Split(content, @"(\^[^^]+\^)");
 
-		if (bold)
+		var pattern = @"([*_^]{1,3}[^*_^\r\n]+[*_^]{1,3})"; 
+		var parts = Regex.Split(content, pattern);
+
+		foreach (var part in parts)
 		{
-			foreach (var part in boldParts)
+			if (string.IsNullOrEmpty(part)) continue;
+
+			string text = part;
+			var fontWeight = FontWeight.Normal;
+			var fontStyle = FontStyle.Normal;
+			TextDecorationCollection? decorations = null;
+
+		
+			bool isBold = text.StartsWith("*") && text.EndsWith("*");
+			bool isItalic = text.StartsWith("_") && text.EndsWith("_");
+			bool isUnderline = text.StartsWith("^") && text.EndsWith("^");
+
+		
+			while (
+				(text.StartsWith("*") || text.StartsWith("_") || text.StartsWith("^")) &&
+				(text.EndsWith("*") || text.EndsWith("_") || text.EndsWith("^"))
+			)
 			{
-				if (Regex.IsMatch(part, @"^\*[^*]+\*$"))
+				if (text.StartsWith("*") && text.EndsWith("*"))
 				{
-					string bold = part.Trim('*');
-					textBlock.Inlines.Add(new Run { Text = bold, FontWeight = Avalonia.Media.FontWeight.Bold });
+					fontWeight = FontWeight.Bold;
+					text = text.Substring(1, text.Length - 2);
 				}
-				else if (Regex.IsMatch(part, @"^_[^_]+_$"))
+				else if (text.StartsWith("_") && text.EndsWith("_"))
 				{
-					string italic = part.Trim('_');
-					textBlock.Inlines.Add(new Run { Text = italic, FontStyle = Avalonia.Media.FontStyle.Italic });
+					fontStyle = FontStyle.Italic;
+					text = text.Substring(1, text.Length - 2);
 				}
-				else
+				else if (text.StartsWith("^") && text.EndsWith("^"))
 				{
-					textBlock.Inlines.Add(new Run { Text = part });
+					decorations = TextDecorations.Underline;
+					text = text.Substring(1, text.Length - 2);
 				}
+				else break;
 			}
-		}
-		if (italic)
-		{
-			foreach (var part in italicParts)
+
+			textBlock.Inlines.Add(new Run
 			{
-				if (Regex.IsMatch(part, @"^_[^_]+_$"))
-				{
-					string italic = part.Trim('_');
-					textBlock.Inlines.Add(new Run { Text = italic, FontStyle = Avalonia.Media.FontStyle.Italic });
-				}
-				else
-				{
-					textBlock.Inlines.Add(new Run { Text = part });
-				}
-			}
-		}
-		if (underline)
-		{
-			foreach (var part in underlineParts)
-			{
-				if (Regex.IsMatch(part, @"^\^[^^]+\^$"))
-				{
-					string underline = part.Trim('^');
-					textBlock.Inlines.Add(new Run
-					{
-						Text = underline,
-						TextDecorations = TextDecorations.Underline
-					});
-				}
-				else
-				{
-					textBlock.Inlines.Add(new Run { Text = part });
-				}
-			}
+				Text = text,
+				FontWeight = fontWeight,
+				FontStyle = fontStyle,
+				TextDecorations = decorations
+			});
 		}
 	}
 
