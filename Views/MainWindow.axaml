@@ -67,7 +67,7 @@
 		</Grid.ColumnDefinitions>
 
 		<Rectangle PointerPressed="Rectangle_PointerPressed" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Fill="#171a1f" />
-		<Button Click="Exit_Button_Click" Foreground="White" Content="setting" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,5,0"/>
+		<Button Click="Exit_Button_Click" Foreground="White" Content="settings" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,5,0"/>
 		<Button Click="OpenFile_Button_Click" Foreground="White" Content="open" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="75,0,5,0"/>
 		<Button Click="SaveFile_Button_Click" Foreground="White" Content="save" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="135,0,5,0"/>
 
