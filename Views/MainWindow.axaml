@@ -90,8 +90,8 @@
 		<Button Click="Minimize_Button_Click" Foreground="White" Grid.Row="0" Grid.Column="0" Content="_" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,45,0"/>
 		
 		<Button x:Name="BoldButton" Click="BoldText_Button_Click" Foreground="White" Grid.Row="1" Grid.Column="0" Content="𝘽" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,5,0,0"/>
-		<Button Click="Minimize_Button_Click" Foreground="White" Grid.Row="1" Grid.Column="0" Content="𝐼" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="37,5,0,0"/>
-		<Button Click="Minimize_Button_Click" Foreground="White" Grid.Row="1" Grid.Column="0" Content="𝕌" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="65,5,0,0"/>
+		<Button x:Name="ItalicButton" Click="ItalicText_Button_Click" Foreground="White" Grid.Row="1" Grid.Column="0" Content="𝐼" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="37,5,0,0"/>
+		<Button x:Name="UnderLineButton" Click="UnderLineText_Button_Click" Foreground="White" Grid.Row="1" Grid.Column="0" Content="𝕌" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="65,5,0,0"/>
 
 
 	</Grid>

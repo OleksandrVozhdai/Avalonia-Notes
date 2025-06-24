@@ -10,6 +10,7 @@ using Avalonia.Controls.Documents;
 using System.Text.RegularExpressions;
 using System.Diagnostics;
 using Tmds.DBus.Protocol;
+using Avalonia.Media;
 
 
 namespace MyNotepad.Views;
@@ -22,16 +23,19 @@ public partial class MainWindow : Window
 	private string selectedTextBeforeLosingFocus = "";
 	private int selectionStartBeforeLosingFocus = 0;
 	private int selectionLengthBeforeLosingFocus = 0;
+	private bool bold, italic, underline, strikethrough;
 
 
 	public MainWindow()
 	{
 		InitializeComponent();
 
-		BoldButton.AddHandler(InputElement.PointerPressedEvent, BoldButton_PointerPressed, RoutingStrategies.Tunnel);
+		BoldButton.AddHandler(InputElement.PointerPressedEvent, ControlButton_PointerPressed, RoutingStrategies.Tunnel);
+		ItalicButton.AddHandler(InputElement.PointerPressedEvent, ControlButton_PointerPressed, RoutingStrategies.Tunnel);
+		UnderLineButton.AddHandler(InputElement.PointerPressedEvent, ControlButton_PointerPressed, RoutingStrategies.Tunnel);
 	}
 
-	private void BoldButton_PointerPressed(object? sender, PointerPressedEventArgs e)
+	private void ControlButton_PointerPressed(object? sender, PointerPressedEventArgs e)
 	{
 		if (e.GetCurrentPoint(null).Properties.IsLeftButtonPressed == true)
 		{
@@ -161,25 +165,66 @@ public partial class MainWindow : Window
 		BaseTextBlock.IsVisible = true;
 	}
 
-
-	
-
 	private void ApplyFormattedText(TextBlock textBlock, string content)
 	{
 		textBlock.Inlines.Clear();
 		
-		var parts = Regex.Split(content, @"(\*[^*]+\*)");
+		var boldParts = Regex.Split(content, @"(\*[^*]+\*)");
+		var italicParts = Regex.Split(content, @"(_[^_]+_)");
+		var underlineParts = Regex.Split(content, @"(\^[^^]+\^)");
 
-		foreach (var part in parts)
+		if (bold)
 		{
-			if (Regex.IsMatch(part, @"^\*[^*]+\*$"))
+			foreach (var part in boldParts)
 			{
-				string bold = part.Trim('*');
-				textBlock.Inlines.Add(new Run { Text = bold, FontWeight = Avalonia.Media.FontWeight.Bold });
+				if (Regex.IsMatch(part, @"^\*[^*]+\*$"))
+				{
+					string bold = part.Trim('*');
+					textBlock.Inlines.Add(new Run { Text = bold, FontWeight = Avalonia.Media.FontWeight.Bold });
+				}
+				else if (Regex.IsMatch(part, @"^_[^_]+_$"))
+				{
+					string italic = part.Trim('_');
+					textBlock.Inlines.Add(new Run { Text = italic, FontStyle = Avalonia.Media.FontStyle.Italic });
+				}
+				else
+				{
+					textBlock.Inlines.Add(new Run { Text = part });
+				}
 			}
-			else
+		}
+		if (italic)
+		{
+			foreach (var part in italicParts)
 			{
-				textBlock.Inlines.Add(new Run { Text = part });
+				if (Regex.IsMatch(part, @"^_[^_]+_$"))
+				{
+					string italic = part.Trim('_');
+					textBlock.Inlines.Add(new Run { Text = italic, FontStyle = Avalonia.Media.FontStyle.Italic });
+				}
+				else
+				{
+					textBlock.Inlines.Add(new Run { Text = part });
+				}
+			}
+		}
+		if (underline)
+		{
+			foreach (var part in underlineParts)
+			{
+				if (Regex.IsMatch(part, @"^\^[^^]+\^$"))
+				{
+					string underline = part.Trim('^');
+					textBlock.Inlines.Add(new Run
+					{
+						Text = underline,
+						TextDecorations = TextDecorations.Underline
+					});
+				}
+				else
+				{
+					textBlock.Inlines.Add(new Run { Text = part });
+				}
 			}
 		}
 	}
@@ -194,6 +239,10 @@ public partial class MainWindow : Window
 
 	private void BoldText_Button_Click(object? sender, RoutedEventArgs e)
 	{
+		bold = true;
+		italic = false;
+		underline = false;
+
 		BaseTextBox.SelectionStart = selectionStartBeforeLosingFocus ;
 		BaseTextBox.SelectionEnd = selectionStartBeforeLosingFocus - selectionLengthBeforeLosingFocus;
 
@@ -201,11 +250,44 @@ public partial class MainWindow : Window
 
 		BaseTextBox.SelectedText = boldText;
 
-		// ????? ????????? ?????????? ????? ??? ???????
-		BaseTextBox.SelectionStart = selectionStartBeforeLosingFocus + 1;
-		BaseTextBox.SelectionEnd = BaseTextBox.SelectionStart + selectedTextBeforeLosingFocus.Length;
+		selectionStartBeforeLosingFocus = BaseTextBox.SelectionStart;
+		selectionLengthBeforeLosingFocus = selectedTextBeforeLosingFocus.Length;
 
-		// ??????? ????????? ???????? ??? ????????? ?????? (???? ????????)
+		BaseTextBox_LostFocus(sender, new RoutedEventArgs());
+	}
+
+	private void ItalicText_Button_Click(object? sender, RoutedEventArgs e)
+	{
+		bold = false;
+		italic = true;
+		underline = false;
+
+		BaseTextBox.SelectionStart = selectionStartBeforeLosingFocus;
+		BaseTextBox.SelectionEnd = selectionStartBeforeLosingFocus - selectionLengthBeforeLosingFocus;
+
+		string italicText = $"_{selectedTextBeforeLosingFocus}_";
+
+		BaseTextBox.SelectedText = italicText;
+
+		selectionStartBeforeLosingFocus = BaseTextBox.SelectionStart;
+		selectionLengthBeforeLosingFocus = selectedTextBeforeLosingFocus.Length;
+
+		BaseTextBox_LostFocus(sender, new RoutedEventArgs());
+	}
+
+	private void UnderLineText_Button_Click(object? sender, RoutedEventArgs e)
+	{
+		bold = false;
+		italic = false;
+		underline = true;
+
+		BaseTextBox.SelectionStart = selectionStartBeforeLosingFocus;
+		BaseTextBox.SelectionEnd = selectionStartBeforeLosingFocus - selectionLengthBeforeLosingFocus;
+
+		string underLineText = $"^{selectedTextBeforeLosingFocus}^";
+
+		BaseTextBox.SelectedText = underLineText;
+
 		selectionStartBeforeLosingFocus = BaseTextBox.SelectionStart;
 		selectionLengthBeforeLosingFocus = selectedTextBeforeLosingFocus.Length;
 
