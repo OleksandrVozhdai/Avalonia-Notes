@@ -112,7 +112,7 @@ public partial class MainWindow : Window
 		}
 	}
 
-	[Obsolete("Use Window.StorageProvider API or TopLevel.StorageProvider API")]
+	[Obsolete]
 	private async void SaveFile_Button_Click(object sender, RoutedEventArgs e)
 	{
 		var window = (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
@@ -134,7 +134,7 @@ public partial class MainWindow : Window
 			{
 				try
 				{
-					await File.WriteAllTextAsync(LastFile, BaseTextBlock.Text);
+					await File.WriteAllTextAsync(LastFile, BaseTextBox.Text);
 				}
 				catch
 				{
@@ -144,7 +144,7 @@ public partial class MainWindow : Window
 		}
 		else if (!string.IsNullOrEmpty(LastFile))
 		{
-			await File.WriteAllTextAsync(LastFile, BaseTextBlock.Text);
+			await File.WriteAllTextAsync(LastFile, BaseTextBox.Text);
 		}
 	}
 
