@@ -7,7 +7,7 @@
         x:Class="MyNotepad.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/notepad-icon.ico"
-        Title="MyNotepad"
+        Title="Avalonia Notepad"
         SystemDecorations="None">
 
     <Design.DataContext>
@@ -71,7 +71,6 @@
 		<Button Click="OpenFile_Button_Click" Foreground="White" Content="open" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="75,0,5,0"/>
 		<Button Click="SaveFile_Button_Click" Foreground="White" Content="save" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="135,0,5,0"/>
 
-
 		<TextBlock x:Name="NameTextBlock" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" Margin="195,0,115,0"> </TextBlock>
 
 		<TextBox x:Name="BaseTextBox"  KeyDown="BaseTextBox_KeyDown" LostFocus="BaseTextBox_LostFocus" AcceptsReturn="True" Grid.ColumnSpan="2" ZIndex="1" BorderBrush="Gray" Foreground="White" Grid.Row="1" Grid.Column="0" Margin="100,5,5,5" Background="#1c1f26" IsVisible="False"/>
@@ -85,15 +84,19 @@
 					   Padding="10"
 					   IsVisible="True" />
 		</ScrollViewer>
-		<Button Click="Exit_Button_Click" Foreground="White" Grid.Row="0" Grid.Column="1" Content="X" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
+		<Button Click="Exit_Button_Click" Foreground="White" Grid.Row="0" Grid.Column="1" Content="✕" Background="DarkRed" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
 		<Button Click="Maximize_Button_Click" Foreground="White" Grid.Row="0" Grid.Column="0" Content="▢" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
 		<Button Click="Minimize_Button_Click" Foreground="White" Grid.Row="0" Grid.Column="0" Content="_" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,45,0"/>
 		
 		<Button x:Name="BoldButton" Click="BoldText_Button_Click" Foreground="White" Grid.Row="1" Grid.Column="0" Content="𝘽" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,5,0,0"/>
-		<Button x:Name="ItalicButton" Click="ItalicText_Button_Click" Foreground="White" Grid.Row="1" Grid.Column="0" Content="𝐼" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="37,5,0,0"/>
-		<Button x:Name="UnderLineButton" Click="UnderLineText_Button_Click" Foreground="White" Grid.Row="1" Grid.Column="0" Content="𝕌" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="65,5,0,0"/>
+		<Button x:Name="ItalicButton" Click="ItalicText_Button_Click" Foreground="White" Grid.Row="1" Grid.Column="0" Content="𝐼" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="38,5,0,0"/>
+		<Button x:Name="UnderLineButton" Click="UnderLineText_Button_Click" Foreground="White" Grid.Row="1" Grid.Column="0" Content="𝕌" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="67,5,0,0"/>
 
+		<TextBox x:Name="FontTextBox" IsVisible="False" LostFocus="FontTextBox_LostFocus" KeyDown="FontTextBox_KeyDown" Grid.Row="1" Grid.Column="0" Height="30" Width="90" TextAlignment="Center" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#1c1f26" Margin="5,45,0,0"/>
+		<TextBlock x:Name="FontTextBlock" Padding="5" PointerPressed="FontTextBlock_PointerPressed" Grid.Row="1" Grid.Column="0" Height="30" Width="90" TextAlignment="Center" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#1c1f26" Margin="5,45,0,0"/>
 
+		<Button x:Name="FontIncrease" Click="Increase_Button_Click" Foreground="White" Grid.Row="1" Width="40" Grid.Column="0" Height="30" FontSize="10" FontWeight="Bold" VerticalContentAlignment="Center" Content="Aa↑" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="55,85,0,0"/>
+		<Button x:Name="FontDecrease" Click="Decrease_Button_Click" Foreground="White" Grid.Row="1" Height="30" FontSize="10" VerticalContentAlignment="Center" FontWeight="Bold" Width="40" Grid.Column="0" Content="Aa↓" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,85,0,0"/>
 	</Grid>
 
 </Window>
