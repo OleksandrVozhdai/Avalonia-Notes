@@ -17,13 +17,13 @@ namespace MyNotepad.Views;
 
 public partial class MainWindow : Window
 {
+	private int fontSize = 15;
 	private bool newFile = true;
 	private string RawText = "";
 	private string? LastFile;
 	private string selectedTextBeforeLosingFocus = "";
 	private int selectionStartBeforeLosingFocus = 0;
 	private int selectionLengthBeforeLosingFocus = 0;
-	private bool bold, italic, underline, strikethrough;
 
 
 	public MainWindow()
@@ -33,6 +33,11 @@ public partial class MainWindow : Window
 		BoldButton.AddHandler(InputElement.PointerPressedEvent, ControlButton_PointerPressed, RoutingStrategies.Tunnel);
 		ItalicButton.AddHandler(InputElement.PointerPressedEvent, ControlButton_PointerPressed, RoutingStrategies.Tunnel);
 		UnderLineButton.AddHandler(InputElement.PointerPressedEvent, ControlButton_PointerPressed, RoutingStrategies.Tunnel);
+
+		FontTextBox.Text = fontSize.ToString();
+		FontTextBlock.Text = fontSize.ToString();
+		BaseTextBlock.FontSize = fontSize;
+		BaseTextBox.FontSize = fontSize;
 	}
 
 	private void ControlButton_PointerPressed(object? sender, PointerPressedEventArgs e)
@@ -157,6 +162,14 @@ public partial class MainWindow : Window
 		BaseTextBox.Focus();
 	}
 
+	private void FontTextBlock_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
+	{
+		FontTextBox.Text = FontTextBlock.Text;
+		FontTextBlock.IsVisible = false;
+		FontTextBox.IsVisible = true;
+		FontTextBox.Focus();
+	}
+
 	private void BaseTextBox_LostFocus(object? sender, RoutedEventArgs e)
 	{
 		RawText = BaseTextBox.Text ?? "";
@@ -165,9 +178,20 @@ public partial class MainWindow : Window
 		BaseTextBlock.IsVisible = true;
 	}
 
+	private void FontTextBox_LostFocus(object? sender, RoutedEventArgs e)
+	{
+		var textBox = sender as TextBox;
+		fontSize = Convert.ToInt32(textBox?.Text);
+		FontTextBlock.Text = fontSize.ToString();
+		FontTextBlock.IsVisible = true;
+		FontTextBox.IsVisible = false;
+		BaseTextBlock.FontSize = fontSize;
+		BaseTextBox.FontSize = fontSize;
+	}
+
 	private void ApplyFormattedText(TextBlock textBlock, string content)
 	{
-		textBlock.Inlines.Clear();
+		textBlock.Inlines?.Clear();
 
 		var pattern = @"([*_^]{1,3}[^*_^\r\n]+[*_^]{1,3})"; 
 		var parts = Regex.Split(content, pattern);
@@ -210,7 +234,7 @@ public partial class MainWindow : Window
 				else break;
 			}
 
-			textBlock.Inlines.Add(new Run
+			textBlock.Inlines?.Add(new Run
 			{
 				Text = text,
 				FontWeight = fontWeight,
@@ -228,12 +252,16 @@ public partial class MainWindow : Window
 		}
 	}
 
+	private void FontTextBox_KeyDown(object sender, KeyEventArgs e)
+	{
+		if (e.Key == Key.Enter )
+		{
+			FontTextBox_LostFocus(sender, new RoutedEventArgs());
+		}
+	}
+
 	private void BoldText_Button_Click(object? sender, RoutedEventArgs e)
 	{
-		bold = true;
-		italic = false;
-		underline = false;
-
 		BaseTextBox.SelectionStart = selectionStartBeforeLosingFocus ;
 		BaseTextBox.SelectionEnd = selectionStartBeforeLosingFocus - selectionLengthBeforeLosingFocus;
 
@@ -249,10 +277,6 @@ public partial class MainWindow : Window
 
 	private void ItalicText_Button_Click(object? sender, RoutedEventArgs e)
 	{
-		bold = false;
-		italic = true;
-		underline = false;
-
 		BaseTextBox.SelectionStart = selectionStartBeforeLosingFocus;
 		BaseTextBox.SelectionEnd = selectionStartBeforeLosingFocus - selectionLengthBeforeLosingFocus;
 
@@ -268,10 +292,6 @@ public partial class MainWindow : Window
 
 	private void UnderLineText_Button_Click(object? sender, RoutedEventArgs e)
 	{
-		bold = false;
-		italic = false;
-		underline = true;
-
 		BaseTextBox.SelectionStart = selectionStartBeforeLosingFocus;
 		BaseTextBox.SelectionEnd = selectionStartBeforeLosingFocus - selectionLengthBeforeLosingFocus;
 
@@ -285,4 +305,23 @@ public partial class MainWindow : Window
 		BaseTextBox_LostFocus(sender, new RoutedEventArgs());
 	}
 
+	private void Increase_Button_Click(object sender, RoutedEventArgs e)
+	{
+		fontSize++;
+		FontTextBox.Text = fontSize.ToString();
+		FontTextBlock.Text = fontSize.ToString();
+		BaseTextBlock.FontSize = fontSize;
+		BaseTextBox.FontSize = fontSize;
+	}
+
+	private void Decrease_Button_Click(object sender, RoutedEventArgs e)
+	{
+		fontSize--;
+		FontTextBox.Text = fontSize.ToString();
+		FontTextBlock.Text = fontSize.ToString();
+		BaseTextBlock.FontSize = fontSize;
+		BaseTextBox.FontSize = fontSize;
+	}
+
+	
 }
