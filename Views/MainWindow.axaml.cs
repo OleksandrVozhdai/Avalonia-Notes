@@ -24,6 +24,7 @@ public partial class MainWindow : Window
 	private string selectedTextBeforeLosingFocus = "";
 	private int selectionStartBeforeLosingFocus = 0;
 	private int selectionLengthBeforeLosingFocus = 0;
+	private int selectionEndBeforeLosingFocus = 0;
 
 
 	public MainWindow()
@@ -47,6 +48,7 @@ public partial class MainWindow : Window
 			selectedTextBeforeLosingFocus = BaseTextBox.SelectedText;
 			selectionStartBeforeLosingFocus = BaseTextBox.SelectionStart;
 			selectionLengthBeforeLosingFocus = BaseTextBox.SelectedText.Length;
+			selectionEndBeforeLosingFocus = BaseTextBox.SelectionEnd;
 		}
 	}
 
@@ -262,45 +264,114 @@ public partial class MainWindow : Window
 
 	private void BoldText_Button_Click(object? sender, RoutedEventArgs e)
 	{
-		BaseTextBox.SelectionStart = selectionStartBeforeLosingFocus ;
-		BaseTextBox.SelectionEnd = selectionStartBeforeLosingFocus - selectionLengthBeforeLosingFocus;
+		if (selectionStartBeforeLosingFocus > selectionEndBeforeLosingFocus)
+		{
+			int temp = selectionStartBeforeLosingFocus;
+			selectionStartBeforeLosingFocus = selectionEndBeforeLosingFocus;
+			selectionEndBeforeLosingFocus = temp;
 
-		string boldText = $"*{selectedTextBeforeLosingFocus}*";
+			string boldText = $"*{selectedTextBeforeLosingFocus}*";
+			BaseTextBox.SelectedText = boldText;
 
-		BaseTextBox.SelectedText = boldText;
+			int selectionStart = selectionStartBeforeLosingFocus;
+			string currentText = BaseTextBox.Text ?? "";
 
-		selectionStartBeforeLosingFocus = BaseTextBox.SelectionStart;
-		selectionLengthBeforeLosingFocus = selectedTextBeforeLosingFocus.Length;
+			if (selectionStart + boldText.Length - 2 <= currentText.Length)
+			{
+				BaseTextBox.Text = currentText.Remove(selectionStart, boldText.Length - 2);
+				BaseTextBox.SelectionStart = selectionStart;
+			}
+		}
+		else
+		{
+			string boldText = $"*{selectedTextBeforeLosingFocus}*";
+			int selectionStart = selectionStartBeforeLosingFocus;
+			int selectionLength = selectionLengthBeforeLosingFocus;
+			string currentText = BaseTextBox.Text ?? "";
+
+			if (selectionStart >= 0 && selectionStart + selectionLength <= currentText.Length)
+			{
+				BaseTextBox.Text = currentText.Remove(selectionStart, selectionLength)
+				.Insert(selectionStart, boldText);
+				BaseTextBox.SelectionStart = selectionStart + boldText.Length;
+			}
+		}
 
 		BaseTextBox_LostFocus(sender, new RoutedEventArgs());
 	}
 
 	private void ItalicText_Button_Click(object? sender, RoutedEventArgs e)
 	{
-		BaseTextBox.SelectionStart = selectionStartBeforeLosingFocus;
-		BaseTextBox.SelectionEnd = selectionStartBeforeLosingFocus - selectionLengthBeforeLosingFocus;
+		if (selectionStartBeforeLosingFocus > selectionEndBeforeLosingFocus)
+		{
+			int temp = selectionStartBeforeLosingFocus;
+			selectionStartBeforeLosingFocus = selectionEndBeforeLosingFocus;
+			selectionEndBeforeLosingFocus = temp;
 
-		string italicText = $"_{selectedTextBeforeLosingFocus}_";
+			string italicText = $"_{selectedTextBeforeLosingFocus}_";
+			BaseTextBox.SelectedText = italicText;
 
-		BaseTextBox.SelectedText = italicText;
+			int selectionStart = selectionStartBeforeLosingFocus;
+			string currentText = BaseTextBox.Text ?? "";
 
-		selectionStartBeforeLosingFocus = BaseTextBox.SelectionStart;
-		selectionLengthBeforeLosingFocus = selectedTextBeforeLosingFocus.Length;
+			if (selectionStart + italicText.Length - 2 <= currentText.Length)
+			{
+				BaseTextBox.Text = currentText.Remove(selectionStart, italicText.Length - 2);
+				BaseTextBox.SelectionStart = selectionStart;
+			}
+		}
+		else
+		{
+			string italicText = $"_{selectedTextBeforeLosingFocus}_";
+			int selectionStart = selectionStartBeforeLosingFocus;
+			int selectionLength = selectionLengthBeforeLosingFocus;
+			string currentText = BaseTextBox.Text ?? "";
+
+			if (selectionStart >= 0 && selectionStart + selectionLength <= currentText.Length)
+			{
+				BaseTextBox.Text = currentText.Remove(selectionStart, selectionLength)
+				.Insert(selectionStart, italicText);
+				BaseTextBox.SelectionStart = selectionStart + italicText.Length;
+			}
+		}
 
 		BaseTextBox_LostFocus(sender, new RoutedEventArgs());
 	}
 
 	private void UnderLineText_Button_Click(object? sender, RoutedEventArgs e)
 	{
-		BaseTextBox.SelectionStart = selectionStartBeforeLosingFocus;
-		BaseTextBox.SelectionEnd = selectionStartBeforeLosingFocus - selectionLengthBeforeLosingFocus;
+		if (selectionStartBeforeLosingFocus > selectionEndBeforeLosingFocus)
+		{
+			int temp = selectionStartBeforeLosingFocus;
+			selectionStartBeforeLosingFocus = selectionEndBeforeLosingFocus;
+			selectionEndBeforeLosingFocus = temp;
 
-		string underLineText = $"^{selectedTextBeforeLosingFocus}^";
+			string underlineText = $"^{selectedTextBeforeLosingFocus}^";
+			BaseTextBox.SelectedText = underlineText;
 
-		BaseTextBox.SelectedText = underLineText;
+			int selectionStart = selectionStartBeforeLosingFocus;
+			string currentText = BaseTextBox.Text ?? "";
 
-		selectionStartBeforeLosingFocus = BaseTextBox.SelectionStart;
-		selectionLengthBeforeLosingFocus = selectedTextBeforeLosingFocus.Length;
+			if (selectionStart + underlineText.Length - 2 <= currentText.Length)
+			{
+				BaseTextBox.Text = currentText.Remove(selectionStart, underlineText.Length - 2);
+				BaseTextBox.SelectionStart = selectionStart;
+			}
+		}
+		else
+		{
+			string underlineText = $"^{selectedTextBeforeLosingFocus}^";
+			int selectionStart = selectionStartBeforeLosingFocus;
+			int selectionLength = selectionLengthBeforeLosingFocus;
+			string currentText = BaseTextBox.Text ?? "";
+
+			if (selectionStart >= 0 && selectionStart + selectionLength <= currentText.Length)
+			{
+				BaseTextBox.Text = currentText.Remove(selectionStart, selectionLength)
+				.Insert(selectionStart, underlineText);
+				BaseTextBox.SelectionStart = selectionStart + underlineText.Length;
+			}
+		}
 
 		BaseTextBox_LostFocus(sender, new RoutedEventArgs());
 	}

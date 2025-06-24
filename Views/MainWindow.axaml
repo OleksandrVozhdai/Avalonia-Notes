@@ -71,10 +71,9 @@
 		<Button Click="OpenFile_Button_Click" Foreground="White" Content="open" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="75,0,5,0"/>
 		<Button Click="SaveFile_Button_Click" Foreground="White" Content="save" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="135,0,5,0"/>
 
-
 		<TextBlock x:Name="NameTextBlock" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" Margin="195,0,115,0"> </TextBlock>
 
-		<TextBox x:Name="BaseTextBox" KeyDown="BaseTextBox_KeyDown" LostFocus="BaseTextBox_LostFocus" AcceptsReturn="True" Grid.ColumnSpan="2" ZIndex="1" BorderBrush="Gray" Foreground="White" Grid.Row="1" Grid.Column="0" Margin="100,5,5,5" Background="#1c1f26" IsVisible="False"/>
+		<TextBox x:Name="BaseTextBox"  KeyDown="BaseTextBox_KeyDown" LostFocus="BaseTextBox_LostFocus" AcceptsReturn="True" Grid.ColumnSpan="2" ZIndex="1" BorderBrush="Gray" Foreground="White" Grid.Row="1" Grid.Column="0" Margin="100,5,5,5" Background="#1c1f26" IsVisible="False"/>
 		<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ZIndex="0">
 			<TextBlock x:Name="BaseTextBlock"
 					   TextWrapping="Wrap"
@@ -98,8 +97,6 @@
 
 		<Button x:Name="FontIncrease" Click="Increase_Button_Click" Foreground="White" Grid.Row="1" Width="40" Grid.Column="0" Height="30" FontSize="10" FontWeight="Bold" VerticalContentAlignment="Center" Content="Aa↑" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="55,85,0,0"/>
 		<Button x:Name="FontDecrease" Click="Decrease_Button_Click" Foreground="White" Grid.Row="1" Height="30" FontSize="10" VerticalContentAlignment="Center" FontWeight="Bold" Width="40" Grid.Column="0" Content="Aa↓" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,85,0,0"/>
-
-
 	</Grid>
 
 </Window>
