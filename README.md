@@ -9,6 +9,10 @@ It features a clean, modern interface with support for dark mode and basic text 
 - Open and save `.txt` files
 - Basic text formatting with symbols (`*bold*`, `_italic_`, `^underline^`)
 
+## 🚧 Work in Progress
+
+This project is still under active development.  
+
 ## Screenshots
 
 ![screenshot](Assets/screenshot.png)
