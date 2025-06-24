@@ -6,17 +6,39 @@ using Avalonia.Controls.ApplicationLifetimes;
 using System.IO;
 using Avalonia;
 using System;
+using Avalonia.Controls.Documents;
+using System.Text.RegularExpressions;
+using System.Diagnostics;
+using Tmds.DBus.Protocol;
+
 
 namespace MyNotepad.Views;
 
 public partial class MainWindow : Window
 {
-	public bool newFile = true;
-	public string? LastFile; // Nullable to satisfy CS8618
+	private bool newFile = true;
+	private string RawText = "";
+	private string? LastFile;
+	private string selectedTextBeforeLosingFocus = "";
+	private int selectionStartBeforeLosingFocus = 0;
+	private int selectionLengthBeforeLosingFocus = 0;
+
 
 	public MainWindow()
 	{
 		InitializeComponent();
+
+		BoldButton.AddHandler(InputElement.PointerPressedEvent, BoldButton_PointerPressed, RoutingStrategies.Tunnel);
+	}
+
+	private void BoldButton_PointerPressed(object? sender, PointerPressedEventArgs e)
+	{
+		if (e.GetCurrentPoint(null).Properties.IsLeftButtonPressed == true)
+		{
+			selectedTextBeforeLosingFocus = BaseTextBox.SelectedText;
+			selectionStartBeforeLosingFocus = BaseTextBox.SelectionStart;
+			selectionLengthBeforeLosingFocus = BaseTextBox.SelectedText.Length;
+		}
 	}
 
 	private void Exit_Button_Click(object sender, RoutedEventArgs e)
@@ -51,7 +73,9 @@ public partial class MainWindow : Window
 			LastFile = files[0];
 			NameTextBlock.Text = Path.GetFileName(LastFile);
 			string content = await File.ReadAllTextAsync(LastFile);
-			BaseTextBox.Text = content;
+			BaseTextBlock.Text = content;
+			RawText = content; 
+			ApplyFormattedText(BaseTextBlock, RawText); 
 		}
 	}
 
@@ -106,7 +130,7 @@ public partial class MainWindow : Window
 			{
 				try
 				{
-					await File.WriteAllTextAsync(LastFile, BaseTextBox.Text);
+					await File.WriteAllTextAsync(LastFile, BaseTextBlock.Text);
 				}
 				catch
 				{
@@ -116,7 +140,76 @@ public partial class MainWindow : Window
 		}
 		else if (!string.IsNullOrEmpty(LastFile))
 		{
-			await File.WriteAllTextAsync(LastFile, BaseTextBox.Text);
+			await File.WriteAllTextAsync(LastFile, BaseTextBlock.Text);
 		}
 	}
+
+	private void BaseTextBlock_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
+	{
+		BaseTextBox.Text = BaseTextBlock.Text;
+		BaseTextBlock.IsVisible = false;
+		BaseTextBox.Text = RawText;	
+		BaseTextBox.IsVisible = true;
+		BaseTextBox.Focus();
+	}
+
+	private void BaseTextBox_LostFocus(object? sender, RoutedEventArgs e)
+	{
+		RawText = BaseTextBox.Text ?? "";
+		ApplyFormattedText(BaseTextBlock, RawText);
+		BaseTextBox.IsVisible = false;
+		BaseTextBlock.IsVisible = true;
+	}
+
+
+	
+
+	private void ApplyFormattedText(TextBlock textBlock, string content)
+	{
+		textBlock.Inlines.Clear();
+		
+		var parts = Regex.Split(content, @"(\*[^*]+\*)");
+
+		foreach (var part in parts)
+		{
+			if (Regex.IsMatch(part, @"^\*[^*]+\*$"))
+			{
+				string bold = part.Trim('*');
+				textBlock.Inlines.Add(new Run { Text = bold, FontWeight = Avalonia.Media.FontWeight.Bold });
+			}
+			else
+			{
+				textBlock.Inlines.Add(new Run { Text = part });
+			}
+		}
+	}
+
+	private void BaseTextBox_KeyDown(object sender, KeyEventArgs e)
+	{
+		if (e.Key == Key.Escape)
+		{
+			BaseTextBox_LostFocus(sender, new RoutedEventArgs());
+		}
+	}
+
+	private void BoldText_Button_Click(object? sender, RoutedEventArgs e)
+	{
+		BaseTextBox.SelectionStart = selectionStartBeforeLosingFocus ;
+		BaseTextBox.SelectionEnd = selectionStartBeforeLosingFocus - selectionLengthBeforeLosingFocus;
+
+		string boldText = $"*{selectedTextBeforeLosingFocus}*";
+
+		BaseTextBox.SelectedText = boldText;
+
+		// ????? ????????? ?????????? ????? ??? ???????
+		BaseTextBox.SelectionStart = selectionStartBeforeLosingFocus + 1;
+		BaseTextBox.SelectionEnd = BaseTextBox.SelectionStart + selectedTextBeforeLosingFocus.Length;
+
+		// ??????? ????????? ???????? ??? ????????? ?????? (???? ????????)
+		selectionStartBeforeLosingFocus = BaseTextBox.SelectionStart;
+		selectionLengthBeforeLosingFocus = selectedTextBeforeLosingFocus.Length;
+
+		BaseTextBox_LostFocus(sender, new RoutedEventArgs());
+	}
+
 }

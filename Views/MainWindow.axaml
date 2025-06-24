@@ -74,11 +74,26 @@
 
 		<TextBlock x:Name="NameTextBlock" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" Margin="195,0,115,0"> </TextBlock>
 
-		<TextBox x:Name="BaseTextBox" AcceptsReturn="True" Grid.ColumnSpan="2" BorderBrush="Gray" Foreground="White" Grid.Row="1" Grid.Column="0" Margin="100,5,5,5" Background="#1c1f26"/>
-
+		<TextBox x:Name="BaseTextBox"  KeyDown="BaseTextBox_KeyDown" LostFocus="BaseTextBox_LostFocus" AcceptsReturn="True" Grid.ColumnSpan="2" ZIndex="1" BorderBrush="Gray" Foreground="White" Grid.Row="1" Grid.Column="0" Margin="100,5,5,5" Background="#1c1f26" IsVisible="False"/>
+		<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ZIndex="0">
+			<TextBlock x:Name="BaseTextBlock"
+					   TextWrapping="Wrap"
+					   Foreground="White"
+					   PointerPressed="BaseTextBlock_PointerPressed"
+					   Background="#1c1f26"
+					   Margin="100,5,5,5"
+					   Padding="10"
+					   IsVisible="True" />
+		</ScrollViewer>
 		<Button Click="Exit_Button_Click" Foreground="White" Grid.Row="0" Grid.Column="1" Content="X" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
 		<Button Click="Maximize_Button_Click" Foreground="White" Grid.Row="0" Grid.Column="0" Content="▢" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
 		<Button Click="Minimize_Button_Click" Foreground="White" Grid.Row="0" Grid.Column="0" Content="_" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,45,0"/>
+		
+		<Button x:Name="BoldButton" Click="BoldText_Button_Click" Foreground="White" Grid.Row="1" Grid.Column="0" Content="𝘽" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,5,0,0"/>
+		<Button Click="Minimize_Button_Click" Foreground="White" Grid.Row="1" Grid.Column="0" Content="𝐼" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="37,5,0,0"/>
+		<Button Click="Minimize_Button_Click" Foreground="White" Grid.Row="1" Grid.Column="0" Content="𝕌" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="65,5,0,0"/>
+
+
 	</Grid>
 
 </Window>
