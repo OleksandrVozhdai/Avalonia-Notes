@@ -86,7 +86,7 @@ public partial class MainWindow : Window
 			LastFile = files[0];
 			NameTextBlock.Text = Path.GetFileName(LastFile);
 			string content = await File.ReadAllTextAsync(LastFile);
-			BaseTextBlock.Text = content;
+
 			RawText = content; 
 			ApplyFormattedText(BaseTextBlock, RawText); 
 		}
