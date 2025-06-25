@@ -12,6 +12,7 @@ using System.Diagnostics;
 using Tmds.DBus.Protocol;
 using Avalonia.Media;
 using MyNotepad.Services;
+using MyNotepad.ViewModels;
 
 
 namespace MyNotepad.Views;
@@ -26,6 +27,8 @@ public partial class MainWindow : Window
 	private int selectionStartBeforeLosingFocus = 0;
 	private int selectionLengthBeforeLosingFocus = 0;
 	private int selectionEndBeforeLosingFocus = 0;
+
+	private ThemeChanger? changer;
 
 	private UndoManager _undoManager = new();
 
@@ -157,6 +160,23 @@ public partial class MainWindow : Window
 		}
 	}
 
+	private void Settings_Button_Click(object sender, RoutedEventArgs e)
+	{
+		var settingsWindow = new Settings();
+		settingsWindow.Show();
+
+		/*if (isSettings)
+		{
+			SettingsGrid.IsVisible = false;
+			isSettings = false;
+		}
+		else
+		{
+			SettingsGrid.IsVisible = true;
+			isSettings = true;
+		}*/
+	}
+
 	private void BaseTextBlock_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
 	{
 		BaseTextBox.Text = BaseTextBlock.Text;
@@ -185,7 +205,14 @@ public partial class MainWindow : Window
 	private void FontTextBox_LostFocus(object? sender, RoutedEventArgs e)
 	{
 		var textBox = sender as TextBox;
-		fontSize = Convert.ToInt32(textBox?.Text);
+		try
+		{
+			fontSize = Convert.ToInt32(textBox?.Text);
+		}
+		catch {
+		
+		}
+
 		FontTextBlock.Text = fontSize.ToString();
 		FontTextBlock.IsVisible = true;
 		FontTextBox.IsVisible = false;
@@ -450,4 +477,6 @@ public partial class MainWindow : Window
 			_undoManager.UndoLast();
 		}
 	}
+
+	
 }

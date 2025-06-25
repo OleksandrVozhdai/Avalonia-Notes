@@ -1,0 +1,40 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+		xmlns:vm="using:MyNotepad.ViewModels"
+		mc:Ignorable="d" d:DesignWidth="800" d:DesignHeight="450"
+        x:Class="MyNotepad.Settings"
+		x:DataType="vm:MainWindowViewModel"
+		Icon="/Assets/notepad-icon.ico"
+		SystemDecorations="None"
+        Title="Settings">
+
+	<Design.DataContext>
+		<vm:MainWindowViewModel/>
+	</Design.DataContext>
+
+	<Grid Background="{Binding BackgroundMainGrid}">
+		<Grid.RowDefinitions>
+			<RowDefinition Height="0.08*"/>
+			<RowDefinition Height="1*"/>
+		</Grid.RowDefinitions>
+
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Width="*"/>
+			<ColumnDefinition Width="Auto"/>
+		</Grid.ColumnDefinitions>
+
+		<Rectangle PointerPressed="Rectangle_PointerPressed" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Fill="{Binding BackgroundColorUpperPanel}" />
+		<TextBlock Grid.Row="0" VerticalAlignment="Center" Text="Settings" HorizontalAlignment="Center" Foreground="{Binding ForegroundColor}" Margin="195,0,115,0"> </TextBlock>
+
+		<Button Click="Exit_Button_Click" Foreground="{Binding ForegroundColor}" Grid.Row="0" Grid.Column="1" Content="✕" Background="DarkRed" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
+		<Button Click="Maximize_Button_Click" Foreground="{Binding ForegroundColor}" Grid.Row="0" Grid.Column="0" Content="▢" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
+		<Button Click="Minimize_Button_Click" Foreground="{Binding ForegroundColor}" Grid.Row="0" Grid.Column="0" Content="_" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,45,0"/>
+
+		<Button x:Name="Theme" Click="ChangeTheme_Button_Click" Foreground="{Binding ForegroundColor}" Height="30" FontSize="10" VerticalContentAlignment="Center" FontWeight="Bold" Grid.Column="0" Grid.Row="1" Content="Theme" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="20,20,0,0"/>
+
+	</Grid>
+	
+</Window>
+
