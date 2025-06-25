@@ -8,7 +8,8 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/notepad-icon.ico"
         Title="Avalonia Notepad"
-        SystemDecorations="None">
+        SystemDecorations="None"
+		KeyDown="Window_KeyDown">
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
