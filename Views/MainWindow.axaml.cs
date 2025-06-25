@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using System.Diagnostics;
 using Tmds.DBus.Protocol;
 using Avalonia.Media;
+using MyNotepad.Services;
 
 
 namespace MyNotepad.Views;
@@ -26,6 +27,7 @@ public partial class MainWindow : Window
 	private int selectionLengthBeforeLosingFocus = 0;
 	private int selectionEndBeforeLosingFocus = 0;
 
+	private UndoManager _undoManager = new();
 
 	public MainWindow()
 	{
@@ -264,6 +266,10 @@ public partial class MainWindow : Window
 
 	private void BoldText_Button_Click(object? sender, RoutedEventArgs e)
 	{
+		// Save the old one for undo 
+		string? oldText = BaseTextBox.Text;
+		//int oldSelectionStart = BaseTextBox.SelectionStart;
+
 		if (selectionStartBeforeLosingFocus > selectionEndBeforeLosingFocus)
 		{
 			int temp = selectionStartBeforeLosingFocus;
@@ -272,6 +278,7 @@ public partial class MainWindow : Window
 
 			string boldText = $"*{selectedTextBeforeLosingFocus}*";
 			BaseTextBox.SelectedText = boldText;
+
 
 			int selectionStart = selectionStartBeforeLosingFocus;
 			string currentText = BaseTextBox.Text ?? "";
@@ -297,11 +304,26 @@ public partial class MainWindow : Window
 			}
 		}
 
+		_undoManager.AddAction(new ButtonAction(() =>
+		{
+#if DEBUG
+			Debug.WriteLine("boldText undo");
+#endif
+			BaseTextBlock.Text = oldText;
+			BaseTextBox.Text = oldText;
+			RawText = oldText;
+		}));
+
 		BaseTextBox_LostFocus(sender, new RoutedEventArgs());
 	}
 
 	private void ItalicText_Button_Click(object? sender, RoutedEventArgs e)
 	{
+
+		// Save the old one for undo 
+		string? oldText = BaseTextBox.Text;
+		//int oldSelectionStart = BaseTextBox.SelectionStart;
+
 		if (selectionStartBeforeLosingFocus > selectionEndBeforeLosingFocus)
 		{
 			int temp = selectionStartBeforeLosingFocus;
@@ -334,12 +356,26 @@ public partial class MainWindow : Window
 				BaseTextBox.SelectionStart = selectionStart + italicText.Length;
 			}
 		}
+		
+		_undoManager.AddAction(new ButtonAction(() =>
+		{
+#if DEBUG
+			Debug.WriteLine("ItalicText undo");
+#endif
+			BaseTextBlock.Text = oldText;
+			BaseTextBox.Text = oldText;
+			RawText = oldText;
+		}));
 
 		BaseTextBox_LostFocus(sender, new RoutedEventArgs());
 	}
 
 	private void UnderLineText_Button_Click(object? sender, RoutedEventArgs e)
 	{
+		// Save the old one for undo 
+		string? oldText = BaseTextBox.Text;
+		//int oldSelectionStart = BaseTextBox.SelectionStart;
+
 		if (selectionStartBeforeLosingFocus > selectionEndBeforeLosingFocus)
 		{
 			int temp = selectionStartBeforeLosingFocus;
@@ -373,6 +409,16 @@ public partial class MainWindow : Window
 			}
 		}
 
+		_undoManager.AddAction(new ButtonAction(() =>
+		{
+#if DEBUG
+			Debug.WriteLine("underLineText undo");
+#endif
+			BaseTextBlock.Text = oldText;
+			BaseTextBox.Text = oldText;
+			RawText = oldText;
+		}));
+
 		BaseTextBox_LostFocus(sender, new RoutedEventArgs());
 	}
 
@@ -394,5 +440,14 @@ public partial class MainWindow : Window
 		BaseTextBox.FontSize = fontSize;
 	}
 
-	
+	private void Window_KeyDown(object? sender, KeyEventArgs e)
+	{
+		if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.Z)
+		{
+#if DEBUG
+			Debug.WriteLine("Undo action triggered");
+#endif
+			_undoManager.UndoLast();
+		}
+	}
 }
