@@ -63,7 +63,7 @@ public partial class MainWindow : Window
 		Close();
 	}
 
-	private void Rectangle_PointerPressed(object? sender, PointerPressedEventArgs e)
+	private void DragWindow_PointerPressed(object? sender, PointerPressedEventArgs e)
 	{
 		if (e.GetCurrentPoint(this).Properties.IsLeftButtonPressed)
 		{
