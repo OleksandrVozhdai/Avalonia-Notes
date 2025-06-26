@@ -74,7 +74,6 @@ public partial class MainWindow : Window
 	[Obsolete]
 	private async void OpenFile_Button_Click(object sender, RoutedEventArgs e)
 	{
-		newFile = false;
 
 		var window = (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
 		if (window is null)
@@ -90,7 +89,7 @@ public partial class MainWindow : Window
 			LastFile = files[0];
 			NameTextBlock.Text = Path.GetFileName(LastFile);
 			string content = await File.ReadAllTextAsync(LastFile);
-
+			newFile = false;
 			RawText = content; 
 			ApplyFormattedText(BaseTextBlock, RawText); 
 		}
@@ -134,7 +133,6 @@ public partial class MainWindow : Window
 
 		if (newFile)
 		{
-			newFile = false;
 			var dialog = new SaveFileDialog
 			{
 				DefaultExtension = "txt"
@@ -148,9 +146,11 @@ public partial class MainWindow : Window
 				try
 				{
 					await File.WriteAllTextAsync(LastFile, BaseTextBox.Text);
+					newFile = false;
 				}
 				catch
 				{
+					
 					// Exception intentionally ignored
 				}
 			}
