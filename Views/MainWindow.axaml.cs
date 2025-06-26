@@ -29,8 +29,6 @@ public partial class MainWindow : Window
 	private int selectionLengthBeforeLosingFocus = 0;
 	private int selectionEndBeforeLosingFocus = 0;
 
-	private ThemeChanger? changer;
-
 	private UndoManager _undoManager = new();
 
 	public MainWindow()
@@ -161,6 +159,36 @@ public partial class MainWindow : Window
 		}
 	}
 
+	[Obsolete]
+	private async void SaveFileAs_Button_Click(object sender, RoutedEventArgs e)
+	{
+		var window = (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
+		if (window is null)
+			return;
+
+		var dialog = new SaveFileDialog
+		{
+			DefaultExtension = "txt"
+		};
+
+		LastFile = await dialog.ShowAsync(window);
+		NameTextBlock.Text = Path.GetFileName(LastFile);
+
+		if (!string.IsNullOrEmpty(LastFile))
+		{
+			try
+			{
+				await File.WriteAllTextAsync(LastFile, BaseTextBox.Text);
+				newFile = false;
+			}
+			catch
+			{
+
+				// Exception intentionally ignored
+			}
+		}
+	}
+
 	private void Settings_Button_Click(object sender, RoutedEventArgs e)
 	{
 		SettingsGrid.IsVisible = !SettingsGrid.IsVisible;
@@ -170,6 +198,9 @@ public partial class MainWindow : Window
 	private void ChangeTheme_Switch_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
 	{
 		var viewModel = DataContext as MainWindowViewModel;
+
+		if (viewModel == null) return;
+
 		if (isDarkTheme)
 		{
 			var changer = new ThemeChanger("light", viewModel);
