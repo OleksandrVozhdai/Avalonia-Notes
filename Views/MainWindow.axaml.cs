@@ -231,45 +231,38 @@ public partial class MainWindow : Window
 	{
 		textBlock.Inlines?.Clear();
 
-		var pattern = @"([*_^]{1,3}[^*_^\r\n]+[*_^]{1,3})"; 
-		var parts = Regex.Split(content, pattern);
+		var pattern = @"(\*[^*]+\*|_[^_]+_|\^[^^]+\^)";
 
-		foreach (var part in parts)
+		var regex = new Regex(pattern);
+		int lastIndex = 0;
+
+		foreach (Match match in regex.Matches(content))
 		{
-			if (string.IsNullOrEmpty(part)) continue;
+			if (match.Index > lastIndex)
+			{
+				string normalText = content.Substring(lastIndex, match.Index - lastIndex);
+				textBlock.Inlines?.Add(new Run { Text = normalText });
+			}
 
-			string text = part;
-			var fontWeight = FontWeight.Normal;
-			var fontStyle = FontStyle.Normal;
+			string text = match.Value;
+			FontWeight fontWeight = FontWeight.Normal;
+			FontStyle fontStyle = FontStyle.Normal;
 			TextDecorationCollection? decorations = null;
 
-		
-			bool isBold = text.StartsWith("*") && text.EndsWith("*");
-			bool isItalic = text.StartsWith("_") && text.EndsWith("_");
-			bool isUnderline = text.StartsWith("^") && text.EndsWith("^");
-
-		
-			while (
-				(text.StartsWith("*") || text.StartsWith("_") || text.StartsWith("^")) &&
-				(text.EndsWith("*") || text.EndsWith("_") || text.EndsWith("^"))
-			)
+			if (text.StartsWith("*") && text.EndsWith("*"))
 			{
-				if (text.StartsWith("*") && text.EndsWith("*"))
-				{
-					fontWeight = FontWeight.Bold;
-					text = text.Substring(1, text.Length - 2);
-				}
-				else if (text.StartsWith("_") && text.EndsWith("_"))
-				{
-					fontStyle = FontStyle.Italic;
-					text = text.Substring(1, text.Length - 2);
-				}
-				else if (text.StartsWith("^") && text.EndsWith("^"))
-				{
-					decorations = TextDecorations.Underline;
-					text = text.Substring(1, text.Length - 2);
-				}
-				else break;
+				fontWeight = FontWeight.Bold;
+				text = text.Substring(1, text.Length - 2);
+			}
+			else if (text.StartsWith("_") && text.EndsWith("_"))
+			{
+				fontStyle = FontStyle.Italic;
+				text = text.Substring(1, text.Length - 2);
+			}
+			else if (text.StartsWith("^") && text.EndsWith("^"))
+			{
+				decorations = TextDecorations.Underline;
+				text = text.Substring(1, text.Length - 2);
 			}
 
 			textBlock.Inlines?.Add(new Run
@@ -279,8 +272,17 @@ public partial class MainWindow : Window
 				FontStyle = fontStyle,
 				TextDecorations = decorations
 			});
+
+			lastIndex = match.Index + match.Length;
+		}
+
+		if (lastIndex < content.Length)
+		{
+			string remaining = content.Substring(lastIndex);
+			textBlock.Inlines?.Add(new Run { Text = remaining });
 		}
 	}
+
 
 	private void BaseTextBox_KeyDown(object sender, KeyEventArgs e)
 	{
