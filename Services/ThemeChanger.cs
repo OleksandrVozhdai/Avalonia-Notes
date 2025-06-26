@@ -44,7 +44,7 @@ namespace MyNotepad.Services
 					{
 						_viewModel.BackgroundColorUpperPanel = new SolidColorBrush(Color.Parse("#f7deb7"));
 						_viewModel.BackgroundMainGrid = new SolidColorBrush(Color.Parse("#fff4e3"));
-						_viewModel.TextBoxBackgroundColor = new SolidColorBrush(Color.Parse("#d1c8ba"));
+						_viewModel.TextBoxBackgroundColor = new SolidColorBrush(Color.Parse("#ffffff"));
 						_viewModel.ForegroundColor = new SolidColorBrush(Color.Parse("#000000"));
 					}
 					break;

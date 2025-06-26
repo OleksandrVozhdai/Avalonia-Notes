@@ -21,6 +21,7 @@ public partial class MainWindow : Window
 {
 	private int fontSize = 15;
 	private bool newFile = true;
+	private bool isDarkTheme = true; 
 	private string RawText = "";
 	private string? LastFile;
 	private string selectedTextBeforeLosingFocus = "";
@@ -162,19 +163,25 @@ public partial class MainWindow : Window
 
 	private void Settings_Button_Click(object sender, RoutedEventArgs e)
 	{
-		var settingsWindow = new Settings();
-		settingsWindow.Show();
+		SettingsGrid.IsVisible = !SettingsGrid.IsVisible;
+		
+	}
 
-		/*if (isSettings)
+	private void ChangeTheme_Switch_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+	{
+		var viewModel = DataContext as MainWindowViewModel;
+		if (isDarkTheme)
 		{
-			SettingsGrid.IsVisible = false;
-			isSettings = false;
+			var changer = new ThemeChanger("light", viewModel);
+			changer.ChangeTheme();
+			isDarkTheme = false;
 		}
 		else
 		{
-			SettingsGrid.IsVisible = true;
-			isSettings = true;
-		}*/
+			var changer = new ThemeChanger("dark", viewModel);
+			changer.ChangeTheme();
+			isDarkTheme = true;
+		}
 	}
 
 	private void BaseTextBlock_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)

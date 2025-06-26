@@ -8,8 +8,12 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/notepad-icon.ico"
         Title="Avalonia Notepad"
-        SystemDecorations="None"
-		KeyDown="Window_KeyDown">
+		ExtendClientAreaToDecorationsHint="True"
+        SystemDecorations="Full"
+		KeyDown="Window_KeyDown"
+		
+		ExtendClientAreaChromeHints="NoChrome"
+		>
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
@@ -85,9 +89,12 @@
 					   Padding="10"
 					   IsVisible="True" />
 		</ScrollViewer>
+		
+		
 		<Button Click="Exit_Button_Click" Foreground="{Binding ForegroundColor}" Grid.Row="0" Grid.Column="1" Content="✕" Background="DarkRed" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
 		<Button Click="Maximize_Button_Click" Foreground="{Binding ForegroundColor}" Grid.Row="0" Grid.Column="0" Content="▢" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
 		<Button Click="Minimize_Button_Click" Foreground="{Binding ForegroundColor}" Grid.Row="0" Grid.Column="0" Content="_" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,45,0"/>
+		
 		
 		<Button x:Name="BoldButton" Click="BoldText_Button_Click" Foreground="{Binding ForegroundColor}" Grid.Row="1" Grid.Column="0" Content="𝘽" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,5,0,0"/>
 		<Button x:Name="ItalicButton" Click="ItalicText_Button_Click" Foreground="{Binding ForegroundColor}" Grid.Row="1" Grid.Column="0" Content="𝐼" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="38,5,0,0"/>
@@ -99,10 +106,10 @@
 		<Button x:Name="FontIncrease" Click="Increase_Button_Click" Foreground="{Binding ForegroundColor}" Grid.Row="1" Width="40" Grid.Column="0" Height="30" FontSize="10" FontWeight="Bold" VerticalContentAlignment="Center" Content="Aa↑" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="55,85,0,0"/>
 		<Button x:Name="FontDecrease" Click="Decrease_Button_Click" Foreground="{Binding ForegroundColor}" Grid.Row="1" Height="30" FontSize="10" VerticalContentAlignment="Center" FontWeight="Bold" Width="40" Grid.Column="0" Content="Aa↓" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,85,0,0"/>
 	
-		<Grid x:Name="SettingsGrid" IsVisible="False">
-			<!-- Need to do flex window size -->
-			<Rectangle Fill="{Binding BackgroundColorUpperPanel}" Height="420" Width="600" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Margin="0,50,0,0" Opacity="1" RadiusX="15" RadiusY="15"/>
-			</Grid>
+		<Grid x:Name="SettingsGrid" IsVisible="False" Grid.Row="1" Grid.ColumnSpan="2">
+			<Rectangle Fill="{Binding BackgroundMainGrid}"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Margin="0,0,0,0" Opacity="1" RadiusX="15" RadiusY="15"/>
+			<ToggleSwitch IsCheckedChanged="ChangeTheme_Switch_Click" IsChecked="False" OffContent="Dark" OnContent="Light" Foreground="{Binding ForegroundColor}" VerticalAlignment="Bottom"  Margin="20"/>
+		</Grid>
 	</Grid>
 	
 
