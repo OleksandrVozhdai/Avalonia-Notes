@@ -21,7 +21,8 @@ public partial class MainWindow : Window
 {
 	private int fontSize = 15;
 	private bool newFile = true;
-	private bool isDarkTheme = true; 
+	private bool isDarkTheme = true;
+	private bool isTextSaved = true;
 	private string RawText = "";
 	private string? LastFile;
 	private string selectedTextBeforeLosingFocus = "";
@@ -29,13 +30,13 @@ public partial class MainWindow : Window
 	private int selectionLengthBeforeLosingFocus = 0;
 	private int selectionEndBeforeLosingFocus = 0;
 
-	private ThemeChanger? changer;
-
 	private UndoManager _undoManager = new();
 
 	public MainWindow()
 	{
 		InitializeComponent();
+
+		BaseTextBox.TextChanged += TextBox_TextChanged;
 
 		BoldButton.AddHandler(InputElement.PointerPressedEvent, ControlButton_PointerPressed, RoutingStrategies.Tunnel);
 		ItalicButton.AddHandler(InputElement.PointerPressedEvent, ControlButton_PointerPressed, RoutingStrategies.Tunnel);
@@ -95,6 +96,21 @@ public partial class MainWindow : Window
 		}
 	}
 
+	private void ChangeNameTextBoxSaveStatus()
+	{
+		if (Path.GetFileName(LastFile) != null)
+		{
+			if (isTextSaved)
+				NameTextBlock.Text = Path.GetFileName(LastFile);
+			else NameTextBlock.Text = Path.GetFileName(LastFile) + "*";
+		}
+	}
+
+	private void TextBox_TextChanged(object? sender, EventArgs e)
+	{
+		isTextSaved = false;
+	}
+
 	private void Minimize_Button_Click(object sender, RoutedEventArgs e)
 	{
 		if (Application.Current?.ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
@@ -147,6 +163,8 @@ public partial class MainWindow : Window
 				{
 					await File.WriteAllTextAsync(LastFile, BaseTextBox.Text);
 					newFile = false;
+					isTextSaved = true;
+					ChangeNameTextBoxSaveStatus();
 				}
 				catch
 				{
@@ -158,18 +176,56 @@ public partial class MainWindow : Window
 		else if (!string.IsNullOrEmpty(LastFile))
 		{
 			await File.WriteAllTextAsync(LastFile, BaseTextBox.Text);
+			isTextSaved = true;
+			ChangeNameTextBoxSaveStatus();
+		}
+	}
+
+	[Obsolete]
+	private async void SaveFileAs_Button_Click(object sender, RoutedEventArgs e)
+	{
+		var window = (Application.Current?.ApplicationLifetime as IClassicDesktopStyleApplicationLifetime)?.MainWindow;
+		if (window is null)
+			return;
+
+		var dialog = new SaveFileDialog
+		{
+			DefaultExtension = "txt"
+		};
+
+		LastFile = await dialog.ShowAsync(window);
+		NameTextBlock.Text = Path.GetFileName(LastFile);
+
+		if (!string.IsNullOrEmpty(LastFile))
+		{
+			try
+			{
+				await File.WriteAllTextAsync(LastFile, BaseTextBox.Text);
+				newFile = false;
+				isTextSaved = true;
+				ChangeNameTextBoxSaveStatus();
+			}
+			catch
+			{
+
+				// Exception intentionally ignored
+			}
 		}
 	}
 
 	private void Settings_Button_Click(object sender, RoutedEventArgs e)
 	{
 		SettingsGrid.IsVisible = !SettingsGrid.IsVisible;
-		
 	}
+
+
 
 	private void ChangeTheme_Switch_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
 	{
 		var viewModel = DataContext as MainWindowViewModel;
+
+		if (viewModel == null) return;
+
 		if (isDarkTheme)
 		{
 			var changer = new ThemeChanger("light", viewModel);
@@ -229,6 +285,8 @@ public partial class MainWindow : Window
 
 	private void ApplyFormattedText(TextBlock textBlock, string content)
 	{
+		ChangeNameTextBoxSaveStatus();
+
 		textBlock.Inlines?.Clear();
 
 		var pattern = @"(\*[^*]+\*|_[^_]+_|\^[^^]+\^)";
@@ -302,6 +360,7 @@ public partial class MainWindow : Window
 
 	private void BoldText_Button_Click(object? sender, RoutedEventArgs e)
 	{
+
 		// Save the old one for undo 
 		string? oldText = BaseTextBox.Text;
 		//int oldSelectionStart = BaseTextBox.SelectionStart;

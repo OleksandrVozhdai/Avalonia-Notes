@@ -73,10 +73,12 @@
 		<Button Click="Settings_Button_Click" Foreground="{Binding ForegroundColor}" Content="settings" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,5,0"/>
 		<Button Click="OpenFile_Button_Click" Foreground="{Binding ForegroundColor}" Content="open" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="80,0,5,0"/>
 		<Button Click="SaveFile_Button_Click" Foreground="{Binding ForegroundColor}" Content="save" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="135,0,5,0"/>
+		<Button Click="SaveFileAs_Button_Click" Foreground="{Binding ForegroundColor}" Content="save as" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="187,0,5,0"/>
+
 
 		<TextBlock PointerPressed="DragWindow_PointerPressed" x:Name="NameTextBlock" Text="Avalonia notes" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{Binding ForegroundColor}" Margin="195,0,115,0"> </TextBlock>
 
-		<TextBox x:Name="BaseTextBox"  KeyDown="BaseTextBox_KeyDown" LostFocus="BaseTextBox_LostFocus" AcceptsReturn="True" Grid.ColumnSpan="2" ZIndex="1" BorderBrush="Gray" Foreground="{Binding ForegroundColor}" Grid.Row="1" Grid.Column="0" Margin="100,5,5,5" Background="{Binding TextBoxBackgroundColor}" IsVisible="False"/>
+		<TextBox x:Name="BaseTextBox" KeyDown="BaseTextBox_KeyDown" LostFocus="BaseTextBox_LostFocus" AcceptsReturn="True" Grid.ColumnSpan="2" ZIndex="1" BorderBrush="Gray" Foreground="{Binding ForegroundColor}" Grid.Row="1" Grid.Column="0" Margin="100,5,5,5" Background="{Binding TextBoxBackgroundColor}" IsVisible="False"/>
 		<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ZIndex="0">
 			<TextBlock x:Name="BaseTextBlock"
 					   TextWrapping="Wrap"
