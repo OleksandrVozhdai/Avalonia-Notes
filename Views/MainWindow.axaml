@@ -8,8 +8,12 @@
         x:DataType="vm:MainWindowViewModel"
         Icon="/Assets/notepad-icon.ico"
         Title="Avalonia Notepad"
-        SystemDecorations="None"
-		KeyDown="Window_KeyDown">
+		ExtendClientAreaToDecorationsHint="True"
+        SystemDecorations="Full"
+		KeyDown="Window_KeyDown"
+		
+		ExtendClientAreaChromeHints="NoChrome"
+		>
 
     <Design.DataContext>
         <vm:MainWindowViewModel/>
@@ -22,13 +26,13 @@
 			<Setter Property="CaretBrush" Value="White"/>
 		
 			<Style Selector="^ /template/ ContentPresenter#PART_ContentPresenter">
-				<Setter Property="Background" Value="#1c1f26"/>
+				<Setter Property="Background" Value="{Binding TextBoxBackgroundColor}"/>
 				<Setter Property="Foreground" Value="White"/>
 			</Style>
 			
 			<Style Selector="^:pointerover /template/ Border#PART_BorderElement">
 				<Setter Property="BorderBrush" Value="Gray"/>
-				<Setter Property="Background" Value="#1c1f26"/>
+				<Setter Property="Background" Value="{Binding TextBoxBackgroundColor}"/>
 			</Style>
 			<Style Selector="^:pointerover /template/ ContentPresenter#PART_ContentPresenter">
 				<Setter Property="Foreground" Value="White"/>
@@ -36,7 +40,7 @@
 			
 			<Style Selector="^:pressed /template/ Border#PART_BorderElement">
 				<Setter Property="BorderBrush" Value="Gray"/>
-				<Setter Property="Background" Value="#1c1f26"/>
+				<Setter Property="Background" Value="{Binding TextBoxBackgroundColor}"/>
 			</Style>
 			<Style Selector="^:pressed /template/ ContentPresenter#PART_ContentPresenter">
 				<Setter Property="Foreground" Value="White"/>
@@ -44,7 +48,7 @@
 		
 			<Style Selector="^:focus /template/ Border#PART_BorderElement">
 				<Setter Property="BorderBrush" Value="Gray"/>
-				<Setter Property="Background" Value="#1c1f26"/>
+				<Setter Property="Background" Value="{Binding TextBoxBackgroundColor}"/>
 			</Style>
 			<Style Selector="^:focus /template/ ContentPresenter#PART_ContentPresenter">
 				<Setter Property="Foreground" Value="White"/>
@@ -56,7 +60,7 @@
 		
 	</Window.Styles>
 
-	<Grid Background="#23272f">
+	<Grid Background="{Binding BackgroundMainGrid}">
 		<Grid.RowDefinitions>
 			<RowDefinition Height="0.08*"/>
 			<RowDefinition Height="1*"/>
@@ -67,37 +71,46 @@
 			<ColumnDefinition Width="Auto"/>
 		</Grid.ColumnDefinitions>
 
-		<Rectangle PointerPressed="Rectangle_PointerPressed" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Fill="#171a1f" />
-		<Button Click="Exit_Button_Click" Foreground="White" Content="settings" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,5,0"/>
-		<Button Click="OpenFile_Button_Click" Foreground="White" Content="open" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="80,0,5,0"/>
-		<Button Click="SaveFile_Button_Click" Foreground="White" Content="save" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="135,0,5,0"/>
+		<Rectangle PointerPressed="Rectangle_PointerPressed" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Fill="{Binding BackgroundColorUpperPanel}" />
+		<Button Click="Settings_Button_Click" Foreground="{Binding ForegroundColor}" Content="settings" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="5,0,5,0"/>
+		<Button Click="OpenFile_Button_Click" Foreground="{Binding ForegroundColor}" Content="open" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="80,0,5,0"/>
+		<Button Click="SaveFile_Button_Click" Foreground="{Binding ForegroundColor}" Content="save" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Left" Margin="135,0,5,0"/>
 
-		<TextBlock x:Name="NameTextBlock" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="White" Margin="195,0,115,0"> </TextBlock>
+		<TextBlock x:Name="NameTextBlock" Text="Avalonia notes" Grid.Row="0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="{Binding ForegroundColor}" Margin="195,0,115,0"> </TextBlock>
 
-		<TextBox x:Name="BaseTextBox"  KeyDown="BaseTextBox_KeyDown" LostFocus="BaseTextBox_LostFocus" AcceptsReturn="True" Grid.ColumnSpan="2" ZIndex="1" BorderBrush="Gray" Foreground="White" Grid.Row="1" Grid.Column="0" Margin="100,5,5,5" Background="#1c1f26" IsVisible="False"/>
+		<TextBox x:Name="BaseTextBox"  KeyDown="BaseTextBox_KeyDown" LostFocus="BaseTextBox_LostFocus" AcceptsReturn="True" Grid.ColumnSpan="2" ZIndex="1" BorderBrush="Gray" Foreground="{Binding ForegroundColor}" Grid.Row="1" Grid.Column="0" Margin="100,5,5,5" Background="{Binding TextBoxBackgroundColor}" IsVisible="False"/>
 		<ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" ZIndex="0">
 			<TextBlock x:Name="BaseTextBlock"
 					   TextWrapping="Wrap"
-					   Foreground="White"
+					   Foreground="{Binding ForegroundColor}"
 					   PointerPressed="BaseTextBlock_PointerPressed"
-					   Background="#1c1f26"
+					   Background="{Binding TextBoxBackgroundColor}"
 					   Margin="100,5,5,5"
 					   Padding="10"
 					   IsVisible="True" />
 		</ScrollViewer>
-		<Button Click="Exit_Button_Click" Foreground="White" Grid.Row="0" Grid.Column="1" Content="✕" Background="DarkRed" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
-		<Button Click="Maximize_Button_Click" Foreground="White" Grid.Row="0" Grid.Column="0" Content="▢" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
-		<Button Click="Minimize_Button_Click" Foreground="White" Grid.Row="0" Grid.Column="0" Content="_" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,45,0"/>
 		
-		<Button x:Name="BoldButton" Click="BoldText_Button_Click" Foreground="White" Grid.Row="1" Grid.Column="0" Content="𝘽" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,5,0,0"/>
-		<Button x:Name="ItalicButton" Click="ItalicText_Button_Click" Foreground="White" Grid.Row="1" Grid.Column="0" Content="𝐼" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="38,5,0,0"/>
-		<Button x:Name="UnderLineButton" Click="UnderLineText_Button_Click" Foreground="White" Grid.Row="1" Grid.Column="0" Content="𝕌" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="67,5,0,0"/>
+		
+		<Button Click="Exit_Button_Click" Foreground="{Binding ForegroundColor}" Grid.Row="0" Grid.Column="1" Content="✕" Background="DarkRed" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
+		<Button Click="Maximize_Button_Click" Foreground="{Binding ForegroundColor}" Grid.Row="0" Grid.Column="0" Content="▢" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,5,0"/>
+		<Button Click="Minimize_Button_Click" Foreground="{Binding ForegroundColor}" Grid.Row="0" Grid.Column="0" Content="_" VerticalAlignment="Center" HorizontalAlignment="Right" Margin="0,0,45,0"/>
+		
+		
+		<Button x:Name="BoldButton" Click="BoldText_Button_Click" Foreground="{Binding ForegroundColor}" Grid.Row="1" Grid.Column="0" Content="𝘽" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,5,0,0"/>
+		<Button x:Name="ItalicButton" Click="ItalicText_Button_Click" Foreground="{Binding ForegroundColor}" Grid.Row="1" Grid.Column="0" Content="𝐼" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="38,5,0,0"/>
+		<Button x:Name="UnderLineButton" Click="UnderLineText_Button_Click" Foreground="{Binding ForegroundColor}" Grid.Row="1" Grid.Column="0" Content="𝕌" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="67,5,0,0"/>
 
-		<TextBox x:Name="FontTextBox" IsVisible="False" LostFocus="FontTextBox_LostFocus" KeyDown="FontTextBox_KeyDown" Grid.Row="1" Grid.Column="0" Height="30" Width="90" TextAlignment="Center" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#1c1f26" Margin="5,45,0,0"/>
-		<TextBlock x:Name="FontTextBlock" Padding="5" PointerPressed="FontTextBlock_PointerPressed" Grid.Row="1" Grid.Column="0" Height="30" Width="90" TextAlignment="Center" Foreground="White" HorizontalAlignment="Left" VerticalAlignment="Top" Background="#1c1f26" Margin="5,45,0,0"/>
+		<TextBox x:Name="FontTextBox" IsVisible="False" LostFocus="FontTextBox_LostFocus" KeyDown="FontTextBox_KeyDown" Grid.Row="1" Grid.Column="0" Height="30" Width="90" TextAlignment="Center" Foreground="{Binding ForegroundColor}" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{Binding TextBoxBackgroundColor}" Margin="5,45,0,0"/>
+		<TextBlock x:Name="FontTextBlock" Padding="5" PointerPressed="FontTextBlock_PointerPressed" Grid.Row="1" Grid.Column="0" Height="30" Width="90" TextAlignment="Center" Foreground="{Binding ForegroundColor}" HorizontalAlignment="Left" VerticalAlignment="Top" Background="{Binding TextBoxBackgroundColor}" Margin="5,45,0,0"/>
 
-		<Button x:Name="FontIncrease" Click="Increase_Button_Click" Foreground="White" Grid.Row="1" Width="40" Grid.Column="0" Height="30" FontSize="10" FontWeight="Bold" VerticalContentAlignment="Center" Content="Aa↑" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="55,85,0,0"/>
-		<Button x:Name="FontDecrease" Click="Decrease_Button_Click" Foreground="White" Grid.Row="1" Height="30" FontSize="10" VerticalContentAlignment="Center" FontWeight="Bold" Width="40" Grid.Column="0" Content="Aa↓" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,85,0,0"/>
+		<Button x:Name="FontIncrease" Click="Increase_Button_Click" Foreground="{Binding ForegroundColor}" Grid.Row="1" Width="40" Grid.Column="0" Height="30" FontSize="10" FontWeight="Bold" VerticalContentAlignment="Center" Content="Aa↑" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="55,85,0,0"/>
+		<Button x:Name="FontDecrease" Click="Decrease_Button_Click" Foreground="{Binding ForegroundColor}" Grid.Row="1" Height="30" FontSize="10" VerticalContentAlignment="Center" FontWeight="Bold" Width="40" Grid.Column="0" Content="Aa↓" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="5,85,0,0"/>
+	
+		<Grid x:Name="SettingsGrid" IsVisible="False" Grid.Row="1" Grid.ColumnSpan="2">
+			<Rectangle Fill="{Binding BackgroundMainGrid}"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Margin="0,0,0,0" Opacity="1" RadiusX="15" RadiusY="15"/>
+			<ToggleSwitch IsCheckedChanged="ChangeTheme_Switch_Click" IsChecked="False" OffContent="Dark" OnContent="Light" Foreground="{Binding ForegroundColor}" VerticalAlignment="Bottom"  Margin="20"/>
+		</Grid>
 	</Grid>
+	
 
 </Window>

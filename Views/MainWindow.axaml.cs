@@ -12,6 +12,7 @@ using System.Diagnostics;
 using Tmds.DBus.Protocol;
 using Avalonia.Media;
 using MyNotepad.Services;
+using MyNotepad.ViewModels;
 
 
 namespace MyNotepad.Views;
@@ -20,12 +21,15 @@ public partial class MainWindow : Window
 {
 	private int fontSize = 15;
 	private bool newFile = true;
+	private bool isDarkTheme = true; 
 	private string RawText = "";
 	private string? LastFile;
 	private string selectedTextBeforeLosingFocus = "";
 	private int selectionStartBeforeLosingFocus = 0;
 	private int selectionLengthBeforeLosingFocus = 0;
 	private int selectionEndBeforeLosingFocus = 0;
+
+	private ThemeChanger? changer;
 
 	private UndoManager _undoManager = new();
 
@@ -157,6 +161,29 @@ public partial class MainWindow : Window
 		}
 	}
 
+	private void Settings_Button_Click(object sender, RoutedEventArgs e)
+	{
+		SettingsGrid.IsVisible = !SettingsGrid.IsVisible;
+		
+	}
+
+	private void ChangeTheme_Switch_Click(object? sender, Avalonia.Interactivity.RoutedEventArgs e)
+	{
+		var viewModel = DataContext as MainWindowViewModel;
+		if (isDarkTheme)
+		{
+			var changer = new ThemeChanger("light", viewModel);
+			changer.ChangeTheme();
+			isDarkTheme = false;
+		}
+		else
+		{
+			var changer = new ThemeChanger("dark", viewModel);
+			changer.ChangeTheme();
+			isDarkTheme = true;
+		}
+	}
+
 	private void BaseTextBlock_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
 	{
 		BaseTextBox.Text = BaseTextBlock.Text;
@@ -185,7 +212,14 @@ public partial class MainWindow : Window
 	private void FontTextBox_LostFocus(object? sender, RoutedEventArgs e)
 	{
 		var textBox = sender as TextBox;
-		fontSize = Convert.ToInt32(textBox?.Text);
+		try
+		{
+			fontSize = Convert.ToInt32(textBox?.Text);
+		}
+		catch {
+		
+		}
+
 		FontTextBlock.Text = fontSize.ToString();
 		FontTextBlock.IsVisible = true;
 		FontTextBox.IsVisible = false;
@@ -450,4 +484,6 @@ public partial class MainWindow : Window
 			_undoManager.UndoLast();
 		}
 	}
+
+	
 }
