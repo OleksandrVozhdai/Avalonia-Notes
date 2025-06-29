@@ -207,7 +207,6 @@ public partial class MainWindow : Window
 			}
 			catch
 			{
-
 				// Exception intentionally ignored
 			}
 		}
@@ -535,6 +534,7 @@ public partial class MainWindow : Window
 		BaseTextBox.FontSize = fontSize;
 	}
 
+	[Obsolete]
 	private void Window_KeyDown(object? sender, KeyEventArgs e)
 	{
 		if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.Z)
@@ -543,6 +543,12 @@ public partial class MainWindow : Window
 			Debug.WriteLine("Undo action triggered");
 #endif
 			_undoManager.UndoLast();
+		}
+
+		if(e.KeyModifiers == KeyModifiers.Control && e.Key == Key.S)
+		{
+			SaveFile_Button_Click(sender: sender, e: new RoutedEventArgs());
+			e.Handled = true; // Prevent further processing of this key event
 		}
 	}
 
