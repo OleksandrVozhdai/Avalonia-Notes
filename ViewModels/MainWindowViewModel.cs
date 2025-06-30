@@ -17,10 +17,11 @@ public partial class MainWindowViewModel : ViewModelBase
 			if (_backgroundColorUpperPanel != value)
 			{
 				_backgroundColorUpperPanel = value;
-				OnPropertyChanged(nameof(BackgroundColorUpperPanel));
+				OnPropertyChanged();
 			}
 		}
 	}
+
 	public IBrush BackgroundMainGrid
 	{
 		get => _backgroundMainGrid;
@@ -29,10 +30,11 @@ public partial class MainWindowViewModel : ViewModelBase
 			if (_backgroundMainGrid != value)
 			{
 				_backgroundMainGrid = value;
-				OnPropertyChanged(nameof(BackgroundMainGrid));
+				OnPropertyChanged();
 			}
 		}
 	}
+
 	public IBrush TextBoxBackgroundColor
 	{
 		get => _textBoxBackgroundColor;
@@ -41,10 +43,11 @@ public partial class MainWindowViewModel : ViewModelBase
 			if (_textBoxBackgroundColor != value)
 			{
 				_textBoxBackgroundColor = value;
-				OnPropertyChanged(nameof(TextBoxBackgroundColor));
+				OnPropertyChanged();
 			}
 		}
 	}
+
 	public IBrush ForegroundColor
 	{
 		get => _foregroundColor;
@@ -53,10 +56,8 @@ public partial class MainWindowViewModel : ViewModelBase
 			if (_foregroundColor != value)
 			{
 				_foregroundColor = value;
-				OnPropertyChanged(nameof(ForegroundColor));
+				OnPropertyChanged();
 			}
 		}
 	}
-
-
 }

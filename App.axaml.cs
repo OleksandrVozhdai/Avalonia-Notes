@@ -6,6 +6,8 @@ using System.Linq;
 using Avalonia.Markup.Xaml;
 using MyNotepad.ViewModels;
 using MyNotepad.Views;
+using Avalonia.Styling;
+using MyNotepad.Services;
 
 namespace MyNotepad;
 
@@ -16,23 +18,30 @@ public partial class App : Application
         AvaloniaXamlLoader.Load(this);
     }
 
-    public override void OnFrameworkInitializationCompleted()
-    {
-        if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
-        {
-            // Avoid duplicate validations from both Avalonia and the CommunityToolkit. 
-            // More info: https://docs.avaloniaui.net/docs/guides/development-guides/data-validation#manage-validationplugins
-            DisableAvaloniaDataAnnotationValidation();
-            desktop.MainWindow = new MainWindow
-            {
-                DataContext = new MainWindowViewModel(),
-            };
-        }
+	public override void OnFrameworkInitializationCompleted()
+	{
+		if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
+		{
+			DisableAvaloniaDataAnnotationValidation();
 
-        base.OnFrameworkInitializationCompleted();
-    }
+			var viewModel = new MainWindowViewModel();
 
-    private void DisableAvaloniaDataAnnotationValidation()
+			var mainWindow = new MainWindow
+			{
+				DataContext = viewModel
+			};
+
+			var themeChanger = new ThemeChanger(SettingsManager.LoadSettings().Theme, viewModel);
+			themeChanger.ChangeTheme();
+
+			desktop.MainWindow = mainWindow;
+		}
+
+		base.OnFrameworkInitializationCompleted();
+	}
+
+
+	private void DisableAvaloniaDataAnnotationValidation()
     {
         // Get an array of plugins to remove
         var dataValidationPluginsToRemove =
