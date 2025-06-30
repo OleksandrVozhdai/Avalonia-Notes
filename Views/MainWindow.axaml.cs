@@ -13,6 +13,7 @@ using Tmds.DBus.Protocol;
 using Avalonia.Media;
 using MyNotepad.Services;
 using MyNotepad.ViewModels;
+using MyNotepad.Models;
 
 
 namespace MyNotepad.Views;
@@ -21,7 +22,7 @@ public partial class MainWindow : Window
 {
 	private int fontSize = 15;
 	private bool newFile = true;
-	private bool isDarkTheme = true;
+	private bool isDarkTheme;
 	private bool isTextSaved = true;
 	private string RawText = "";
 	private string? LastFile;
@@ -36,6 +37,8 @@ public partial class MainWindow : Window
 	{
 		InitializeComponent();
 
+		
+
 		BaseTextBox.TextChanged += TextBox_TextChanged;
 
 		BoldButton.AddHandler(InputElement.PointerPressedEvent, ControlButton_PointerPressed, RoutingStrategies.Tunnel);
@@ -46,7 +49,10 @@ public partial class MainWindow : Window
 		FontTextBlock.Text = fontSize.ToString();
 		BaseTextBlock.FontSize = fontSize;
 		BaseTextBox.FontSize = fontSize;
+
+		
 	}
+
 
 	private void ControlButton_PointerPressed(object? sender, PointerPressedEventArgs e)
 	{
@@ -230,12 +236,16 @@ public partial class MainWindow : Window
 			var changer = new ThemeChanger("light", viewModel);
 			changer.ChangeTheme();
 			isDarkTheme = false;
+
+			SettingsManager.SaveSettings(new AppSettings { Theme = "light" });
 		}
 		else
 		{
 			var changer = new ThemeChanger("dark", viewModel);
 			changer.ChangeTheme();
 			isDarkTheme = true;
+
+			SettingsManager.SaveSettings(new AppSettings { Theme = "dark" });
 		}
 	}
 
@@ -534,7 +544,7 @@ public partial class MainWindow : Window
 		BaseTextBox.FontSize = fontSize;
 	}
 
-	[Obsolete]
+
 	private void Window_KeyDown(object? sender, KeyEventArgs e)
 	{
 		if (e.KeyModifiers == KeyModifiers.Control && e.Key == Key.Z)
@@ -547,7 +557,7 @@ public partial class MainWindow : Window
 
 		if(e.KeyModifiers == KeyModifiers.Control && e.Key == Key.S)
 		{
-			SaveFile_Button_Click(sender: sender, e: new RoutedEventArgs());
+			SaveFile_Button_Click(sender, new RoutedEventArgs());
 			e.Handled = true; // Prevent further processing of this key event
 		}
 	}
