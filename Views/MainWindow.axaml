@@ -108,7 +108,7 @@
 	
 		<Grid x:Name="SettingsGrid" IsVisible="False" Grid.Row="1" Grid.ColumnSpan="2">
 			<Rectangle Fill="{Binding BackgroundMainGrid}"  HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="1" Margin="0,0,0,0" Opacity="1" RadiusX="15" RadiusY="15"/>
-			<ToggleSwitch IsCheckedChanged="ChangeTheme_Switch_Click" IsChecked="False" OffContent="Dark" OnContent="Light" Foreground="{Binding ForegroundColor}" VerticalAlignment="Bottom"  Margin="20"/>
+			<ToggleSwitch x:Name="ThemeSwitcher" IsCheckedChanged="ChangeTheme_Switch_Click" IsChecked="False" OffContent="Dark" OnContent="Light" Foreground="{Binding ForegroundColor}" VerticalAlignment="Bottom"  Margin="20"/>
 		</Grid>
 	</Grid>
 	

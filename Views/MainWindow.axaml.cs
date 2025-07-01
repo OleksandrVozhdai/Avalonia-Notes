@@ -37,8 +37,6 @@ public partial class MainWindow : Window
 	{
 		InitializeComponent();
 
-		
-
 		BaseTextBox.TextChanged += TextBox_TextChanged;
 
 		BoldButton.AddHandler(InputElement.PointerPressedEvent, ControlButton_PointerPressed, RoutingStrategies.Tunnel);
@@ -50,7 +48,22 @@ public partial class MainWindow : Window
 		BaseTextBlock.FontSize = fontSize;
 		BaseTextBox.FontSize = fontSize;
 
-		
+		var settings = SettingsManager.LoadSettings();
+		string theme = settings.Theme;
+
+		Debug.WriteLine($"Current theme: {theme}");
+
+		if (theme == "dark")
+		{
+			isDarkTheme = true;
+			ThemeSwitcher.IsChecked = false;
+		}
+		else
+		{
+			isDarkTheme = false;
+			ThemeSwitcher.IsChecked = true;
+		}
+
 	}
 
 

@@ -9,6 +9,7 @@ It features a clean, modern interface with support for dark mode and basic text 
 - Open and save `.txt` files
 - Basic text formatting with symbols (`*bold*`, `_italic_`, `^underline^`)
 - Standard notepad functionality (create new file, edit text, undo/redo, cut/copy/paste, select all)
+- Keyboard shortcuts for faster editing
 
 ## 🚧 Work in Progress
 
