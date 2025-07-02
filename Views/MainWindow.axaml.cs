@@ -14,6 +14,7 @@ using Avalonia.Media;
 using MyNotepad.Services;
 using MyNotepad.ViewModels;
 using MyNotepad.Models;
+using System.Linq;
 
 
 namespace MyNotepad.Views;
@@ -51,7 +52,9 @@ public partial class MainWindow : Window
 		var settings = SettingsManager.LoadSettings();
 		string theme = settings.Theme;
 
+#if DEBUG
 		Debug.WriteLine($"Current theme: {theme}");
+#endif
 
 		if (theme == "dark")
 		{
@@ -308,60 +311,75 @@ public partial class MainWindow : Window
 	private void ApplyFormattedText(TextBlock textBlock, string content)
 	{
 		ChangeNameTextBoxSaveStatus();
-
 		textBlock.Inlines?.Clear();
 
-		var pattern = @"(\*[^*]+\*|_[^_]+_|\^[^^]+\^)";
-
-		var regex = new Regex(pattern);
-		int lastIndex = 0;
-
-		foreach (Match match in regex.Matches(content))
+		int i = 0;
+		while (i < content.Length)
 		{
-			if (match.Index > lastIndex)
+		
+			if ((content[i] == '*' || content[i] == '_' || content[i] == '^'))
 			{
-				string normalText = content.Substring(lastIndex, match.Index - lastIndex);
-				textBlock.Inlines?.Add(new Run { Text = normalText });
+				var markers = new List<char>();
+				int markerStart = i;
+
+				while (i < content.Length && (content[i] == '*' || content[i] == '_' || content[i] == '^'))
+					markers.Add(content[i++]);
+
+				int textStart = i;
+				int textEnd = -1;
+
+				
+				while (i < content.Length)
+				{
+					if (i + markers.Count > content.Length)
+						break;
+
+					string end = content.Substring(i, markers.Count);
+					string reversed = new string(markers.AsEnumerable().Reverse().ToArray());
+
+					if (end == reversed)
+					{
+						textEnd = i;
+						break;
+					}
+
+					i++;
+				}
+
+				if (textEnd != -1)
+				{
+					string innerText = content.Substring(textStart, textEnd - textStart);
+					var run = new Run { Text = innerText };
+
+					if (markers.Contains('*')) run.FontWeight = FontWeight.Bold;
+					if (markers.Contains('_')) run.FontStyle = FontStyle.Italic;
+					if (markers.Contains('^')) run.TextDecorations = TextDecorations.Underline;
+
+					textBlock.Inlines?.Add(run);
+					i += markers.Count;
+				}
+				else
+				{
+					
+					string fallback = content.Substring(markerStart, content.Length - markerStart);
+					textBlock.Inlines?.Add(new Run { Text = fallback });
+					break;
+				}
 			}
-
-			string text = match.Value;
-			FontWeight fontWeight = FontWeight.Normal;
-			FontStyle fontStyle = FontStyle.Normal;
-			TextDecorationCollection? decorations = null;
-
-			if (text.StartsWith("*") && text.EndsWith("*"))
+			else
 			{
-				fontWeight = FontWeight.Bold;
-				text = text.Substring(1, text.Length - 2);
+				int start = i;
+				while (i < content.Length && content[i] != '*' && content[i] != '_' && content[i] != '^')
+					i++;
+
+				string normal = content.Substring(start, i - start);
+				textBlock.Inlines?.Add(new Run { Text = normal });
 			}
-			else if (text.StartsWith("_") && text.EndsWith("_"))
-			{
-				fontStyle = FontStyle.Italic;
-				text = text.Substring(1, text.Length - 2);
-			}
-			else if (text.StartsWith("^") && text.EndsWith("^"))
-			{
-				decorations = TextDecorations.Underline;
-				text = text.Substring(1, text.Length - 2);
-			}
-
-			textBlock.Inlines?.Add(new Run
-			{
-				Text = text,
-				FontWeight = fontWeight,
-				FontStyle = fontStyle,
-				TextDecorations = decorations
-			});
-
-			lastIndex = match.Index + match.Length;
-		}
-
-		if (lastIndex < content.Length)
-		{
-			string remaining = content.Substring(lastIndex);
-			textBlock.Inlines?.Add(new Run { Text = remaining });
 		}
 	}
+
+
+
 
 
 	private void BaseTextBox_KeyDown(object sender, KeyEventArgs e)
